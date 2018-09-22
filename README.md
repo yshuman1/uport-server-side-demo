@@ -1,217 +1,121 @@
-# uport-js
-**Required Upgrade to v0.6.3 to support new uPort Clients - [View Details](https://github.com/uport-project/uport-js/releases/tag/v0.6.3)**
-## Integrate uPort in your javascript application
+This is the uPort serverside credentials demo app.
+uPort original README.md can be found at ./Original-README.md
+Repo: https://github.com/yshuman1/uport-server-side-demo.git
+Instructions can be found at: https://developer.uport.me/uport-js/guides/server-side-credentials-example
 
-uPort provides a simple way for your users to login to your website and provide private credentials such as identity information and contact details to you.
+For this example:
 
-You can also “attest” credentials they provide to you or that you yourself have about them. This can be shared back to your customers so you can help them build their digital identity.
+# **requestcredential.js**
 
-Uport.js provides a simple way for you to integrate uport.js into your javascript application. You can also interact with your uPort users directly in the browser.
+##### The file requestcredential.js contains a service that will request the MNID identifier of the mobile application.
 
-We have an easy to use browser library [uport-connect](https://github.com/uport-project/uport-connect) which can help you do so.
+1. Install the uPort Mobile app.
 
-## Setup your uPort application identity
+2. Use ngrok: `$ ngrok http 8081`
 
-First make sure you have your uPort app installed and you've setup your own uPort identity.
+3. Replace the endpoint on line 9 with the one from ngrok (make sure you use the https one).
 
-### What is a uPort identity?
+4. I have created an app saved the credentials in the files. If you want to create your own app credentials visit: https://appmanager.uport.me/
 
-An identity in uPort is really just someone or something that can sign data or transactions and also receive signed data about itself.
+5. `$ node requestcredential.js` Once you scan the QR code a jwt will print to your console.
 
-An identity has an identifier in the form of an [MNID](https://github.com/uport-project/mnid), a signing key, and a public key stored on the [uPort Registry](https://github.com/uport-project/uport-registry).
+##### If you successfully you should see the following on your console:
 
-An identity can:
+```
+Service Output:
+me.uport:me?requestToken=eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NksifQ.eyJpYXQiOjE1Mzc1ODk4ODEsInJlcXVlc3RlZCI6WyJpZGVudGl0eV9ubyJdLCJjYWxsYmFjayI6Imh0dHBzOi8vY2ZkNjI2ZDEubmdyb2suaW8vY2FsbGJhY2siLCJleHAiOjE1Mzc1OTAxODEsInR5cGUiOiJzaGFyZVJlcSIsImlzcyI6IjJvaGpoZ1p2VldRb1U0Znh4U2g3R2JuREMyeUs1Z25VZEFIIn0.ta2BKnjKBwvpkQ53mB
+MvlDPmxOs22sMJ0i0gAmUKJNqlTfvurbXaNhEV5Aes7IkOct7MaEwLkXgMJ9vATjgwoA%26callback_type=post
 
-- Sign JWTs (JSON Web Tokens)
-  - [Authenticate themselves to a third party](https://github.com/uport-project/specs/blob/develop/messages/shareresp.md)
-  - [Disclose private information about themselves](https://github.com/uport-project/specs/blob/develop/messages/shareresp.md)
-- [Receive requests for disclosure about themselves](https://github.com/uport-project/specs/blob/develop/messages/sharereq.md)
-- [Receive and store signed third party verifications about themselves](https://github.com/uport-project/specs/blob/develop/flows/verification.md)
-- [Sign Ethereum transactions](https://github.com/uport-project/specs/blob/developflows/tx.md)
+JWT (access token):
 
-When interacting privately with a user you will be interchanging signed JWT([JSON Web Token](https://jwt.io/)). To verify the signature of the JWT you and your users will be fetching your public key from the public profile.
+eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NksifQ.eyJpYXQiOjE1Mzc1ODk4OTUsImV4cCI6MTUzNzY3NjI5NSwiYXVkIjoiMm9oamhnWnZWV1FvVTRmeHhTaDdHYm5EQzJ5SzVnblVkQUgiLCJ0eXBlIjoic2hhcmVSZXNwIiwibmFkIjoiMm9mYmpLRFZjQWpiNXBrU1p6d2pzQUt4V2RNd2M0endpQ3MiLCJvd24iOnt9LCJyZXEiOiJleUowZVhBaU9pSktWMVFpTENKaGJHY2lPaUpGVXpJMU5rc2lmUS5leUpwWVhRaU9qRTFNemMxT0RrNE9ERXNJbkpsY1hWbGMzUmxaQ0k2V3lKcFpHVnVkR2wwZVY5dWJ5SmRMQ0pqWVd4c1ltRmpheUk2SW1oMGRIQnpPaTh2WTJaa05qSTJaREV1Ym1keWIyc3VhVzh2WTJGc2JHSmhZMnNpTENKbGVIQWlPakUxTXpjMU9UQXhPREVzSW5SNWNHVWlPaUp6YUdGeVpWSmxjU0lzSW1semN5STZJakp2YUdwb1oxcDJWbGRSYjFVMFpuaDRVMmczUjJKdVJFTXllVXMxWjI1VlpFRklJbjAudGEyQktuaktCd3Zwa1E1M21CTXZsRFBteE9zMjJzTUowaTBnQW1VS0pOcWxUZnZ1cmJYYU5oRVY1QWVzN0lrT2N0N01hRXdMa1hnTUo5dkFUamd3b0EiLCJpc3MiOiIyb2ZiaktEVmNBamI1cGtTWnp3anNBS3hXZE13YzR6d2lDcyJ9.zIZn6tFxpMdYjeWDXLkTFtU5V-GGJhY9SoU5jSf0uQ9Wvs-cF8e6Q48FA_vuQGo0y5K6xTJt9-DKrHppcPZRHg
 
-For details on uPort's underlying architecture, read our [spec repo](https://github.com/uport-project/specs) or check out the [uPort identity contracts] (https://github.com/uport-project/uport-identity).
+Decoded JWT:
 
-## Configure your application
-
-In your application you must first configure your uPort object.
-
-```javascript
-import { Credentials, SimpleSigner } from 'uport'
-
-const signer = SimpleSigner(process.env.PRIVATE_KEY)
-const credentials = new Credentials({
-  appName: 'App Name',
-  address: 'MNID Encoded uPort Address For Your App',
-  signer: signer,
-  networks: networks
-})
+{ address: '2ofbjKDVcAjb5pkSZzwjsAKxWdMwc4zwiCs',
+did: '2ofbjKDVcAjb5pkSZzwjsAKxWdMwc4zwiCs',
+networkAddress: '2ofbjKDVcAjb5pkSZzwjsAKxWdMwc4zwiCs',
+publicKey: '0x04589467c4841610f634a23a9fee84eefb27bb10d5c93446264080bd17baf368807786f683559af9c117d5d25cd5f46e1835a7487fa2d49169d8f4a6902d6cff96',
+publicEncKey: 'ya40edHkDa2gCXpz4xOk/N5tBolGaEQw7mo9jaIROQM=' }
 ```
 
-Going forward all uPort application ID addresses must be [MNID encoded](https://github.com/uport-project/mnid). MNID will encode the network with the address. Use of hex encoded addresses is deprecated. Using a hex encoded address will indicated you are on ropsten using our deprecated registry, if you require this use case then continue to pass a hex encoded address. If you are on ropsten but using our latest registry, pass a MNID encoded address with ropsten.
+- Please note the address value, that is the Multi Network Identifier (MNID). To learn more about MNID's read this: https://medium.com/uport/mnid-a-safer-way-of-encoding-blockchain-addresses-in-a-multi-chain-world-4222e7b62714
 
-The networks object includes a set of networks for which JWTs will be verified over. JWT verification includes an on-chain lookup for the public key mapped to the issuers identity, the MIND encoding of the issuer's address defines the network and registry to use for lookup. If you are interested in verifying JWTs over additional networks, pass in a network configs object, defined as follows:
+# **createcredential.js**
 
-```javascript
- const networks = { id: '0x2a' :
-                      { registry: '0x5f8e9351dc2d238fb878b6ae43aa740d62fc9758',
-                        rpcUrl: 'https://kovan.infura.io' },
-                   id: ....   : { ... }
-                 }
+1. Use ngrok: `$ ngrok http 8081`
+
+2. `node createcredential.js`
+
+You should end up with a result similar to this:
+Your phone should display an attestation that looks similar to this: https://imgur.com/yyHfPox
+
+```
+eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NksifQ.eyJpYXQiOjE1Mzc1OTEwNzEsInN1YiI6IjJvZmJqS0RWY0FqYjVwa1Naendqc0FLeFdkTXdjNHp3aUNzIiwiY2xhaW0iOnsiUHVsc2UgSUQgSW5mbyI6eyJlbWFpbCI6Inlhc2luQHB1bHNlYWdlbnQuY28iLCJUd2l0dGVyIjoiQHlhc2luMDQyNCIsIkxpbmtlZEluIjoiaHR0cHM6Ly93d3cubGlua2VkaW4uY29tL2luL3lzaHVtYW4vIn19LCJleHAiOjE1NTIwNDYwMjQsImlzcyI6IjJvaGpoZ1p2VldRb1U0Znh4U2g3R2JuREMyeUs1Z25VZEFIIn0.Zedf1KJWypswcGgwsiKgiqVtukzFqZasTDV3vXQ-0zguk9HLcmH3_-uMENetXwCbfHGRAUeFpfV9tW9xZz0WnA
+{ header: { typ: 'JWT', alg: 'ES256K' },
+  payload:
+   { iat: 1537591071,
+     sub: '2ofbjKDVcAjb5pkSZzwjsAKxWdMwc4zwiCs',
+     claim: { 'Pulse ID Info': [Object] },
+     exp: 1552046024,
+     iss: '2ohjhgZvVWQoU4fxxSh7GbnDC2yK5gnUdAH' },
+  signature: 'Zedf1KJWypswcGgwsiKgiqVtukzFqZasTDV3vXQ-0zguk9HLcmH3_-uMENetXwCbfHGRAUeFpfV9tW9xZz0WnA' }
+me.uport:add?attestations=eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NksifQ.eyJpYXQiOjE1Mzc1OTEwNzEsInN1YiI6IjJvZmJqS0RWY0FqYjVwa1Naendqc0FLeFdkTXdjNHp3aUNzIiwiY2xhaW0iOnsiUHVsc2UgSUQgSW5mbyI6eyJlbWFpbCI6Inlhc2luQHB1bHNlYWdlbnQuY28iLCJUd2l0dGVyIjoiQHlhc2luMDQyNCIsIkxpbmtlZEluIjoiaHR0cHM6Ly93d3cubGlua2VkaW4uY29tL2luL3lzaHVtYW4vIn19LCJleHAiOjE1NTIwNDYwMjQsImlzcyI6IjJvaGpoZ1p2VldRb1U0Znh4U2g3R2JuREMyeUs1Z25VZEFIIn0.Zedf1KJWypswcGgwsiKgiqVtukzFqZasTDV3vXQ-0zguk9HLcmH3_-uMENetXwCbfHGRAUeFpfV9tW9xZz0WnA%26callback_type=post
 ```
 
-Look in [uport-lite](https://github.com/uport-project/uport-lite) for the default networks and registries which will be queried for JWT verification.
+# **verifycredential.js**
 
-## Requesting information from your users
+1. Use ngrok: `$ ngrok http 8081`
 
-To request information from your user you create a Selective Disclosure Request JWT and present it to your user in the web browser.
+2. Replace the endpoint on line 9 with the one from ngrok.
 
-The most basic request to get a users public uport identity details:
+3. `node createcredential.js`
 
-```javascript
-credentials.createRequest().then(requestToken => {
-  // send requestToken to browser
-})
+##### If you do not have the credentials/attestation on your uPort app, you will recieve an response like this (rejection id: 1):
+
+```
+me.uport:me?requestToken=eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NksifQ.eyJpYXQiOjE1Mzc1OTE4NTMsInJlcXVlc3RlZCI6WyJpZGVudGl0eV9ubyIsIm5hbWUiLCJhdmF0YXIiLCJwaG9uZSIsImNvdW50cnkiXSwidmVyaWZpZWQiOlsiUHVsc2UgSUQgSW5mbyJdLCJjYWxsYmFjayI6Imh0dHBzOi8vY2ZkNjI2ZDEubmdyb2suaW8vY2FsbGJhY2siLCJleHAiOjE1Mzc1OTIxNTMsInR5cGUiOiJzaGFyZVJlcSIsImlzcyI6IjJvaGpoZ1p2VldRb1U0Znh4U2g3R2JuREMyeUs1Z25VZEFIIn0.Vh02P3OrEvCo_GuDJSh7psjZF7TedufIlvfWcArUvyQUQELcTiNxLOABmJPK4AjsbhJupZ3zlLdxVgCOgL8g5A%26callback_type=post
+eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NksifQ.eyJpYXQiOjE1Mzc1OTE4NTcsImV4cCI6MTUzNzY3ODI1NywiYXVkIjoiMm9oamhnWnZWV1FvVTRmeHhTaDdHYm5EQzJ5SzVnblVkQUgiLCJ0eXBlIjoic2hhcmVSZXNwIiwibmFkIjoiMm9mYmpLRFZjQWpiNXBrU1p6d2pzQUt4V2RNd2M0endpQ3MiLCJvd24iOnsibmFtZSI6Illhc2luIiwiYXZhdGFyIjp7InVyaSI6Imh0dHBzOi8vaXBmcy5pbmZ1cmEuaW8vaXBmcy9RbWU5bjlrSGs0U1NXTGJ3bnVKY2Z6M0NCTmdBYmhGeHRLaGhjMXloblpFbmpyIn0sInBob25lIjoiKzE2Mjg2MDA4NzcyIiwiY291bnRyeSI6IlVTIn0sInJlcSI6ImV5SjBlWEFpT2lKS1YxUWlMQ0poYkdjaU9pSkZVekkxTmtzaWZRLmV5SnBZWFFpT2pFMU16YzFPVEU0TlRNc0luSmxjWFZsYzNSbFpDSTZXeUpwWkdWdWRHbDBlVjl1YnlJc0ltNWhiV1VpTENKaGRtRjBZWElpTENKd2FHOXVaU0lzSW1OdmRXNTBjbmtpWFN3aWRtVnlhV1pwWldRaU9sc2lVSFZzYzJVZ1NVUWdTVzVtYnlKZExDSmpZV3hzWW1GamF5STZJbWgwZEhCek9pOHZZMlprTmpJMlpERXVibWR5YjJzdWFXOHZZMkZzYkdKaFkyc2lMQ0psZUhBaU9qRTFNemMxT1RJeE5UTXNJblI1Y0dVaU9pSnphR0Z5WlZKbGNTSXNJbWx6Y3lJNklqSnZhR3BvWjFwMlZsZFJiMVUwWm5oNFUyZzNSMkp1UkVNeWVVczFaMjVWWkVGSUluMC5WaDAyUDNPckV2Q29fR3VESlNoN3BzalpGN1RlZHVmSWx2ZldjQXJVdnlRVVFFTGNUaU54TE9BQm1KUEs0QWpzYmhKdXBaM3psTGR4VmdDT2dMOGc1QSIsInZlcmlmaWVkIjpbXSwiaXNzIjoiMm9mYmpLRFZjQWpiNXBrU1p6d2pzQUt4V2RNd2M0endpQ3MifQ.prXeRF_w_iioEz5EA32RKT9PPpVBscBAe0WbCv9ErqQT9prbp_VOagbPzmBIegBVurpsfWCHMA8TVDW5iGrN2A
+{ name: 'Yasin',
+  avatar: { uri: 'https://ipfs.infura.io/ipfs/Qme9n9kHk4SSWLbwnuJcfz3CBNgAbhFxtKhhc1yhnZEnjr' },
+  phone: '+16286008772',
+  country: 'US',
+  address: '2ofbjKDVcAjb5pkSZzwjsAKxWdMwc4zwiCs',
+  did: '2ofbjKDVcAjb5pkSZzwjsAKxWdMwc4zwiCs',
+  networkAddress: '2ofbjKDVcAjb5pkSZzwjsAKxWdMwc4zwiCs',
+  publicKey: '0x04589467c4841610f634a23a9fee84eefb27bb10d5c93446264080bd17baf368807786f683559af9c117d5d25cd5f46e1835a7487fa2d49169d8f4a6902d6cff96',
+  publicEncKey: 'ya40edHkDa2gCXpz4xOk/N5tBolGaEQw7mo9jaIROQM=',
+  verified: [] }
+(node:9981) UnhandledPromiseRejectionWarning: Unhandled promise rejection (rejection id: 1): TypeError: Cannot read property 'sub' of undefined
+(node:9981) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminatethe Node.js process with a non-zero exit code.
 ```
 
-You can ask for specific private data like this:
+##### If successful it will look like this:
 
-```javascript
-credentials.createRequest({
-    requested: ['name','phone','identity_no'],
-    callbackUrl: 'https://....' // URL to send the response of the request to
-  }).then(requestToken => {
-  // send requestToken to browser
-  })
 ```
+me.uport:me?requestToken=eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NksifQ.eyJpYXQiOjE1Mzc1OTIwNjUsInJlcXVlc3RlZCI6WyJpZGVudGl0eV9ubyIsIm5hbWUiLCJhdmF0YXIiLCJwaG9uZSIsImNvdW50cnkiXSwidmVyaWZpZWQiOlsiUHVsc2UgSUQgSW5mbyJdLCJjYWxsYmFjayI6Imh0dHBzOi8vY2ZkNjI2ZDEubmdyb2suaW8vY2FsbGJhY2siLCJleHAiOjE1Mzc1OTIzNjUsInR5cGUiOiJzaGFyZVJlcSIsImlzcyI6IjJvaGpoZ1p2VldRb1U0Znh4U2g3R2JuREMyeUs1Z25VZEFIIn0.B3KoHkpU_llCzQ0AC2Fynn8q7S8cCkOljZYSU8-nGQsghz57ZARHmZykd9IGQJfZ2YZKvyLVsKXQ9rl89KVUZA%26callback_type=post
+eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NksifQ.eyJpYXQiOjE1Mzc1OTIwNzEsImV4cCI6MTUzNzY3ODQ3MSwiYXVkIjoiMm9oamhnWnZWV1FvVTRmeHhTaDdHYm5EQzJ5SzVnblVkQUgiLCJ0eXBlIjoic2hhcmVSZXNwIiwibmFkIjoiMm9mYmpLRFZjQWpiNXBrU1p6d2pzQUt4V2RNd2M0endpQ3MiLCJvd24iOnsibmFtZSI6Illhc2luIiwiYXZhdGFyIjp7InVyaSI6Imh0dHBzOi8vaXBmcy5pbmZ1cmEuaW8vaXBmcy9RbWU5bjlrSGs0U1NXTGJ3bnVKY2Z6M0NCTmdBYmhGeHRLaGhjMXloblpFbmpyIn0sInBob25lIjoiKzE2Mjg2MDA4NzcyIiwiY291bnRyeSI6IlVTIiwiUHVsc2UgSUQgSW5mbyI6eyJlbWFpbCI6Inlhc2luQHB1bHNlYWdlbnQuY28iLCJUd2l0dGVyIjoiQHlhc2luMDQyNCIsIkxpbmtlZEluIjoiaHR0cHM6Ly93d3cubGlua2VkaW4uY29tL2luL3lzaHVtYW4vIn19LCJyZXEiOiJleUowZVhBaU9pSktWMVFpTENKaGJHY2lPaUpGVXpJMU5rc2lmUS5leUpwWVhRaU9qRTFNemMxT1RJd05qVXNJbkpsY1hWbGMzUmxaQ0k2V3lKcFpHVnVkR2wwZVY5dWJ5SXNJbTVoYldVaUxDSmhkbUYwWVhJaUxDSndhRzl1WlNJc0ltTnZkVzUwY25raVhTd2lkbVZ5YVdacFpXUWlPbHNpVUhWc2MyVWdTVVFnU1c1bWJ5SmRMQ0pqWVd4c1ltRmpheUk2SW1oMGRIQnpPaTh2WTJaa05qSTJaREV1Ym1keWIyc3VhVzh2WTJGc2JHSmhZMnNpTENKbGVIQWlPakUxTXpjMU9USXpOalVzSW5SNWNHVWlPaUp6YUdGeVpWSmxjU0lzSW1semN5STZJakp2YUdwb1oxcDJWbGRSYjFVMFpuaDRVMmczUjJKdVJFTXllVXMxWjI1VlpFRklJbjAuQjNLb0hrcFVfbGxDelEwQUMyRnlubjhxN1M4Y0NrT2xqWllTVTgtbkdRc2doejU3WkFSSG1aeWtkOUlHUUpmWjJZWkt2eUxWc0tYUTlybDg5S1ZVWkEiLCJ2ZXJpZmllZCI6WyJleUowZVhBaU9pSktWMVFpTENKaGJHY2lPaUpGVXpJMU5rc2lmUS5leUpwWVhRaU9qRTFNemMxT1RJd05ETXNJbk4xWWlJNklqSnZabUpxUzBSV1kwRnFZalZ3YTFOYWVuZHFjMEZMZUZka1RYZGpOSHAzYVVOeklpd2lZMnhoYVcwaU9uc2lVSFZzYzJVZ1NVUWdTVzVtYnlJNmV5SmxiV0ZwYkNJNklubGhjMmx1UUhCMWJITmxZV2RsYm5RdVkyOGlMQ0pVZDJsMGRHVnlJam9pUUhsaGMybHVNRFF5TkNJc0lreHBibXRsWkVsdUlqb2lhSFIwY0hNNkx5OTNkM2N1YkdsdWEyVmthVzR1WTI5dEwybHVMM2x6YUhWdFlXNHZJbjE5TENKbGVIQWlPakUxTlRJd05EWXdNalFzSW1semN5STZJakp2YUdwb1oxcDJWbGRSYjFVMFpuaDRVMmczUjJKdVJFTXllVXMxWjI1VlpFRklJbjAuTERyX0ktczZFdkl1dlZ3bC1wa2Y0RHVwRzAzUG5xMEtkZ05qU2U5MVVxellYcklSYU5vZXhtc0s5ZkpGQkRCcGJzTkhteGRFRktVU0JfTkJnSzROS2ciXSwiaXNzIjoiMm9mYmpLRFZjQWpiNXBrU1p6d2pzQUt4V2RNd2M0endpQ3MifQ.vYKfT7Jmb2TIJrqUQQi6pbwDczmDoDQ9TbIoK_6BwEBeLU7EM_1fBYpkXrLrVFiooRId7F_nzsX4Kt4Q_FXLcQ
+{ name: 'Yasin',
+  avatar: { uri: 'https://ipfs.infura.io/ipfs/Qme9n9kHk4SSWLbwnuJcfz3CBNgAbhFxtKhhc1yhnZEnjr' },
+  phone: '+16286008772',
+  country: 'US',
+  'Pulse ID Info':
+   { email: 'yasin@pulseagent.co',
+     Twitter: '@yasin0424',
+     LinkedIn: 'https://www.linkedin.com/in/yshuman/' },
+  address: '2ofbjKDVcAjb5pkSZzwjsAKxWdMwc4zwiCs',
+  did: '2ofbjKDVcAjb5pkSZzwjsAKxWdMwc4zwiCs',
+  networkAddress: '2ofbjKDVcAjb5pkSZzwjsAKxWdMwc4zwiCs',
+  publicKey: '0x04589467c4841610f634a23a9fee84eefb27bb10d5c93446264080bd17baf368807786f683559af9c117d5d25cd5f46e1835a7487fa2d49169d8f4a6902d6cff96',
+  publicEncKey: 'ya40edHkDa2gCXpz4xOk/N5tBolGaEQw7mo9jaIROQM=',
+  verified:
+   [ { iat: 1537592043,
+       sub: '2ofbjKDVcAjb5pkSZzwjsAKxWdMwc4zwiCs',
+       claim: [Object],
+       exp: 1552046024,
+       iss: '2ohjhgZvVWQoU4fxxSh7GbnDC2yK5gnUdAH',
+       jwt: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NksifQ.eyJpYXQiOjE1Mzc1OTIwNDMsInN1YiI6IjJvZmJqS0RWY0FqYjVwa1Naendqc0FLeFdkTXdjNHp3aUNzIiwiY2xhaW0iOnsiUHVsc2UgSUQgSW5mbyI6eyJlbWFpbCI6Inlhc2luQHB1bHNlYWdlbnQuY28iLCJUd2l0dGVyIjoiQHlhc2luMDQyNCIsIkxpbmtlZEluIjoiaHR0cHM6Ly93d3cubGlua2VkaW4uY29tL2luL3lzaHVtYW4vIn19LCJleHAiOjE1NTIwNDYwMjQsImlzcyI6IjJvaGpoZ1p2VldRb1U0Znh4U2g3R2JuREMyeUs1Z25VZEFIIn0.LDr_I-s6EvIuvVwl-pkf4DupG03Pnq0KdgNjSe91UqzYXrIRaNoexmsK9fJFBDBpbsNHmxdEFKUSB_NBgK4NKg' } ] }
 
-If you need to know the users address on a specific ethereum network, specify it's `network_id` (currently defaults to ropsten `0x3`). In this case be aware that the `address` returned will be the address on the public network (currently ropsten) for the users profile. The requested network address will be in the `networkAddress` field and will be MNID encoded.
 
-```javascript
-credentials.createRequest({network_id: '0x4'}).then(requestToken => {
-  // send requestToken to browser
-})
-```
-
-In your front end use [uport-connect](https://github.com/uport-project/uport-connect) to present it to your user either as a QR code or as a uport-button depending on whether they are on a desktop or mobile browser.
-
-```javascript
-const connect = new uportconnect.Connect('app name')
-connect.showRequest(requestToken).then(response => {
-  // send response back to server
-})
-```
-
-Back in your server code you receive the token:
-
-```javascript
-credentials.receive(responseToken).then(profile => {
-  // Store user profile
-})
-```
-For more information about the contents of the profile object see the uport-persona documentation.
-
-### Stateless Challenge/Response
-
-To ensure that the response received was created as a response to your selective disclosure request above, the original request is included in the response from the mobile app.
-
-The default verification rule is that the issuer of the embedded request must match the clientId in your Credentials object and that the original request has not yet expired.
-
-Some applications that exclusively live in the browser are unable to sign the original request. In those cases the request token verification is ignored.
-
-### Requesting Push notification tokens from your users
-
-As part of the selective disclosure request you can ask for permission from your users to communicate directly with their app.
-
-```javascript
-credentials.createRequest({
-  requested:[...],
-  notifications: true
-}).then(requestToken => {
-  // send to browser
-})
-```
-
-Present it to the user like before. On the server you can receive the push token like this:
-
-```javascript
-credentials.receive(responseToken).then(profile => {
-  // Store user profile
-  // Store push token securely
-  console.log(profile.pushToken)
-})
-```
-
-## Attesting information about your users
-
-Attesting information about your users helps add real value to your application. Your users will use uport to build up their own digital identity and your business is an important part of this.
-
-If you're a financial institution you may be able to attest to KYC related information such as national identity numbers. If you're an educational application you may want to attest to your users achievements in a way that they can securely share.
-
-### What are attestations
-
-Attestations are shareable private information that one party can sign about another party. They are designed to be shared privately by you to your users and by them to other users.
-
-### Creating an attestation
-
-```javascript
-credentials.attest({
-  sub: '0x...', // uport address of user
-  exp: <future timestamp>, // If your information is not permanent make sure to add an expires timestamp
-  claims: {name:'John Smith'}
-}).then(attestation => {
-  // send attestation to user
-})
-```
-
-As before you will want to send this to your user. You can do this in the browser
-
-```javascript
-const connect = new uportconnect.Connect('app name')
-connect.showRequest(attestation) // no response is needed for an attestation
-```
-
-If you requested a push notification token in the above selective disclosure step you can also send attestations directly to your users app in real time.
-
-```javascript
-credentials.push(pushToken, `me.uport:add?attestation=${attestationjwt}`, message).then(response => {
-
-})
-```
-
-## Asking users to sign Ethereum transactions
-
-Ethereum smart contracts live on the blockchain and at a certain address. The application interface is known as the abi and can be created by the Solidity compiler.
-
-Our Contract class will let you create a javascript object modelling the SmartContract allowing you to create uport uri's that you can send to the user.
-
-```javascript
-import { Contract } from 'uport'
-const abi = // import from json or have directly in code
-const contract = Contract(abi).at(contractAddress)
-// creates a request for the user to call the transfer() function on the smart contract
-const txRequest = tokenContract.transfer(....)
-```
-
-In your front end use 'uport-connect' to present it to your user either as a QR code or as a uport-button depending on whether they are on a desktop or mobile browser.
-
-```javascript
-const connect = new uportconnect.Connect('app name')
-connect.sendTransaction(txRequest).then(txResponse => {
-  // send response back to server
-})
-```
-
-Back in your server code you receive the `txResponse`. This is a standard ethereum transaction object that you can verify.
-
-## Creating Custom Signers for integrating with HSM
-
-You can easily create custom signers that integrates into your existing signing infrastructure.
-
-```javascript
-function sign(data, callback) {
-    const signature = '' // send your data to your back end signer and return DER signed data
-    callback(null, signature)
-}
+Credential verified.
 ```
