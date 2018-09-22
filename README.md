@@ -1,9 +1,12 @@
 This is the uPort serverside credentials demo app.
 uPort original README.md can be found at ./Original-README.md
+
 Repo: https://github.com/yshuman1/uport-server-side-demo.git
 Instructions can be found at: https://developer.uport.me/uport-js/guides/server-side-credentials-example
 
 For this example:
+
+$ cd examples/simple-credentials-tutorial/
 
 # **requestcredential.js**
 
